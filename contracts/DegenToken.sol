@@ -20,9 +20,21 @@ contract DegenToken is ERC20, Ownable, ERC20Burnable {
     }
 
     function redeem(uint256 itemNo) public {
-        require(itemNo > 0 && itemNo < itemCosts.length, "Invalid item selection");
+        require(itemNo > 0 && itemNo <= itemCosts.length, "Invalid item selection");
         require(balanceOf(msg.sender) >= itemCosts[itemNo], "Insufficient balance");
 
         _burn(msg.sender, itemCosts[itemNo]);
+    }
+
+    function checkBalance(address account) public view returns (uint256) {
+        return balanceOf(account);
+    }
+
+    function transfer(address recipient, uint256 amount) public virtual override returns (bool) {
+        _transfer(_msgSender(), recipient, amount);
+        return true;
+    }
+    function burnAmount(uint256 amount)public {
+        _burn(msg.sender, amount);
     }
 }
